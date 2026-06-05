@@ -126,15 +126,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="edge_detector.cpp" />
+    <ClCompile Include="hough_transform.cpp" />
     <ClCompile Include="image_loader.cpp" />
+    <ClCompile Include="line_detector.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="edge_detector.h" />
+    <ClInclude Include="hough_transform.h" />
     <ClInclude Include="image_loader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\Downloads\test.jpg" />
+    <ClInclude Include="line_detector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
