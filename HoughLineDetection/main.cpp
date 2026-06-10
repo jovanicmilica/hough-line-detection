@@ -8,7 +8,6 @@
 #include <tbb/flow_graph.h>
 #include <chrono>
 
-// Struct to pass all data through the graph
 struct PipelineData {
     Image original;
     Image gray;
@@ -17,18 +16,23 @@ struct PipelineData {
     std::vector<Line> lines;
     std::string outputPrefix;
     int threshold;
+    double timeLoad;
     double timeGrayscale;
     double timeEdge;
     double timeHough;
     double timeLine;
 };
 
-void processImage(const std::string& inputPath, const std::string& outputPrefix, int threshold, std::ofstream& outFile)
+void processImage(const std::string& inputPath, const std::string& outputPrefix, int threshold, std::ofstream& outFile, double& totalParallelOut)
 {
     std::cout << "\n--- Processing: " << inputPath << " ---" << std::endl;
 
+    // Measure image loading
+    auto start = std::chrono::high_resolution_clock::now();
     Image img = loadImage(inputPath);
-    std::cout << "Image loaded: " << img.width << "x" << img.height << " channels: " << img.channels << std::endl;
+    auto end = std::chrono::high_resolution_clock::now();
+    double timeLoad = std::chrono::duration<double, std::milli>(end - start).count();
+    std::cout << "Image loaded: " << img.width << "x" << img.height << " channels: " << img.channels << " in " << timeLoad << " ms" << std::endl;
 
     tbb::flow::graph g;
 
@@ -78,20 +82,23 @@ void processImage(const std::string& inputPath, const std::string& outputPrefix,
 
     // Node 5 - Save results
     tbb::flow::function_node<PipelineData, tbb::flow::continue_msg> saveNode(g, tbb::flow::serial,
-        [&outFile](PipelineData data) {
+        [&outFile, &totalParallelOut](PipelineData data) {
             Image result = drawLines(data.original, data.lines);
             saveImage(data.outputPrefix + "_grayscale.png", data.gray);
             saveImage(data.outputPrefix + "_edges.png", data.edges);
             saveImage(data.outputPrefix + "_result.png", result);
 
+            double total = data.timeLoad + data.timeGrayscale + data.timeEdge + data.timeHough + data.timeLine;
+            totalParallelOut = total;
+
             outFile << "\n[Parallel] " << data.outputPrefix << "\n";
+            outFile << "  Load:       " << data.timeLoad << " ms\n";
             outFile << "  Grayscale:  " << data.timeGrayscale << " ms\n";
             outFile << "  Edge:       " << data.timeEdge << " ms\n";
             outFile << "  Hough:      " << data.timeHough << " ms\n";
             outFile << "  Lines:      " << data.timeLine << " ms\n";
-
-            double totalParallel = data.timeGrayscale + data.timeEdge + data.timeHough + data.timeLine;
-            outFile << "  Total: " << totalParallel << " ms\n";
+            outFile << "  Total:      " << total << " ms\n";
+            outFile << "  Lines detected: " << data.lines.size() << "\n";
 
             std::cout << "Saved results to output folder." << std::endl;
             return tbb::flow::continue_msg();
@@ -107,22 +114,27 @@ void processImage(const std::string& inputPath, const std::string& outputPrefix,
     input.original = img;
     input.outputPrefix = outputPrefix;
     input.threshold = threshold;
+    input.timeLoad = timeLoad;
     input.timeGrayscale = input.timeEdge = input.timeHough = input.timeLine = 0.0;
 
     grayscaleNode.try_put(input);
     g.wait_for_all();
 }
 
-void processImageSequential(const std::string& inputPath, int threshold, std::ofstream& outFile)
+void processImageSequential(const std::string& inputPath, int threshold, std::ofstream& outFile, double& totalSequentialOut)
 {
     std::cout << "\n--- Sequential processing: " << inputPath << " ---" << std::endl;
 
+    // Measure image loading
+    auto start = std::chrono::high_resolution_clock::now();
     Image img = loadImage(inputPath);
+    auto end = std::chrono::high_resolution_clock::now();
+    double timeLoad = std::chrono::duration<double, std::milli>(end - start).count();
 
     // Phase 1 - Grayscale
-    auto start = std::chrono::high_resolution_clock::now();
+    start = std::chrono::high_resolution_clock::now();
     Image gray = convertToGrayscaleSequential(img);
-    auto end = std::chrono::high_resolution_clock::now();
+    end = std::chrono::high_resolution_clock::now();
     double timeGrayscale = std::chrono::duration<double, std::milli>(end - start).count();
 
     // Phase 2 - Edge detection
@@ -143,15 +155,16 @@ void processImageSequential(const std::string& inputPath, int threshold, std::of
     end = std::chrono::high_resolution_clock::now();
     double timeLine = std::chrono::duration<double, std::milli>(end - start).count();
 
-    double totalSequential = timeGrayscale + timeEdge + timeHough + timeLine;
+    double total = timeLoad + timeGrayscale + timeEdge + timeHough + timeLine;
+    totalSequentialOut = total;
 
     outFile << "\n[Sequential] " << inputPath << "\n";
+    outFile << "  Load:       " << timeLoad << " ms\n";
     outFile << "  Grayscale:  " << timeGrayscale << " ms\n";
     outFile << "  Edge:       " << timeEdge << " ms\n";
     outFile << "  Hough:      " << timeHough << " ms\n";
     outFile << "  Lines:      " << timeLine << " ms\n";
-
-    outFile << "  Total: " << totalSequential << " ms\n";
+    outFile << "  Total:      " << total << " ms\n";
     outFile << "  Lines detected: " << lines.size() << "\n";
 }
 
@@ -170,12 +183,24 @@ int main()
 
     for (const auto& img : images)
     {
-        processImage(std::get<0>(img), std::get<1>(img), std::get<2>(img), outFile);
-        processImageSequential(std::get<0>(img), std::get<2>(img), outFile);
+        double totalParallel = 0.0;
+        double totalSequential = 0.0;
+
+        processImage(std::get<0>(img), std::get<1>(img), std::get<2>(img), outFile, totalParallel);
+        processImageSequential(std::get<0>(img), std::get<2>(img), outFile, totalSequential);
+
+        double speedup = totalSequential / totalParallel;
+        outFile << "\nSpeedup: " << speedup << "x\n";
+        outFile << "----------------------------------------\n";
+
+        std::cout << "Speedup: " << speedup << "x" << std::endl;
     }
 
     outFile << "\n=== Done ===\n";
     outFile.close();
 
-    std::cout << "Done.\n";
+    std::cout << "\nAll images processed successfully." << std::endl;
+    std::cout << "Results saved to output/results.txt" << std::endl;
+
+    return 0;
 }
