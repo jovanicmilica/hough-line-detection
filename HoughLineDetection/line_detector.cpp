@@ -109,3 +109,51 @@ Image drawLines(const Image& originalImage, const std::vector<Line>& lines)
 
     return result;
 }
+
+std::vector<Line> detectLinesSequential(const HoughAccumulator& accumulator, int threshold)
+{
+    std::vector<Line> detectedLines;
+
+    for (int rhoIdx = 1; rhoIdx < accumulator.rhoCount - 1; rhoIdx++)
+    {
+        for (int thetaIdx = 1; thetaIdx < accumulator.thetaCount - 1; thetaIdx++)
+        {
+            int votes = accumulator.at(rhoIdx, thetaIdx);
+
+            if (votes < threshold)
+                continue;
+
+            bool isLocalMax = true;
+            for (int dr = -2; dr <= 2 && isLocalMax; dr++)
+            {
+                for (int dc = -2; dc <= 2 && isLocalMax; dc++)
+                {
+                    if (dr == 0 && dc == 0)
+                        continue;
+
+                    int nr = rhoIdx + dr;
+                    int nc = thetaIdx + dc;
+
+                    if (nr < 0 || nr >= accumulator.rhoCount ||
+                        nc < 0 || nc >= accumulator.thetaCount)
+                        continue;
+
+                    if (accumulator.at(nr, nc) >= votes)
+                        isLocalMax = false;
+                }
+            }
+
+            if (!isLocalMax)
+                continue;
+
+            Line line;
+            line.rho = rhoIdx - accumulator.maxRho;
+            line.theta = thetaIdx * PI_LD / accumulator.thetaCount;
+            line.votes = votes;
+
+            detectedLines.push_back(line);
+        }
+    }
+
+    return detectedLines;
+}

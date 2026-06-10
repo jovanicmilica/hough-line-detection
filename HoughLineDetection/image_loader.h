@@ -12,3 +12,5 @@ struct Image {
 Image loadImage(const std::string& path);   
 Image convertToGrayscale(const Image& image);
 void saveImage(const std::string& path, const Image& image);
+
+Image convertToGrayscaleSequential(const Image& image);

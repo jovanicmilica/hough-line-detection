@@ -88,6 +88,28 @@ void processImage(const std::string& inputPath, const std::string& outputPrefix,
     g.wait_for_all();
 }
 
+void processImageSequential(const std::string& inputPath, int threshold)
+{
+    std::cout << "\n--- Sequential processing: " << inputPath << " ---" << std::endl;
+
+    // Phase 1 - Image loading and grayscale conversion
+    Image img = loadImage(inputPath);
+    Image gray = convertToGrayscaleSequential(img);
+    std::cout << "Grayscale conversion done." << std::endl;
+
+    // Phase 2 - Edge detection
+    Image edges = applySobelSequential(gray);
+    std::cout << "Edge detection done." << std::endl;
+
+    // Phase 3 - Hough transform
+    HoughAccumulator accumulator = computeHoughTransformSequential(edges);
+    std::cout << "Hough transform done." << std::endl;
+
+    // Phase 4 - Line detection
+    std::vector<Line> lines = detectLinesSequential(accumulator, threshold);
+    std::cout << "Lines detected: " << lines.size() << std::endl;
+}
+
 int main()
 {
     try
@@ -103,6 +125,7 @@ int main()
         for (const auto& img : images)
         {
             processImage(std::get<0>(img), std::get<1>(img), std::get<2>(img));
+            processImageSequential(std::get<0>(img), std::get<2>(img));
         }
 
         std::cout << "\nAll images processed successfully." << std::endl;

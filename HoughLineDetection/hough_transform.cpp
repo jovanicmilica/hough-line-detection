@@ -65,3 +65,41 @@ HoughAccumulator computeHoughTransform(const Image& edgeImage)
 
     return accumulator;
 }
+
+HoughAccumulator computeHoughTransformSequential(const Image& edgeImage)
+{
+    int width = edgeImage.width;
+    int height = edgeImage.height;
+
+    double maxRho = std::sqrt(width * width + height * height);
+    int rhoCount = static_cast<int>(2 * maxRho) + 1;
+    int thetaCount = 180;
+
+    HoughAccumulator accumulator;
+    accumulator.rhoCount = rhoCount;
+    accumulator.thetaCount = thetaCount;
+    accumulator.maxRho = maxRho;
+    accumulator.data.resize(rhoCount * thetaCount, 0);
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            if (edgeImage.data[y * width + x] == 0)
+                continue;
+
+            for (int thetaIdx = 0; thetaIdx < thetaCount; thetaIdx++)
+            {
+                double theta = thetaIdx * PI / thetaCount;
+                double rho = x * std::cos(theta) + y * std::sin(theta);
+
+                int rhoIdx = static_cast<int>(rho + maxRho);
+
+                if (rhoIdx >= 0 && rhoIdx < rhoCount)
+                    accumulator.data[rhoIdx * thetaCount + thetaIdx]++;
+            }
+        }
+    }
+
+    return accumulator;
+}

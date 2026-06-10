@@ -24,3 +24,5 @@ struct HoughAccumulator {
 };
 
 HoughAccumulator computeHoughTransform(const Image& edgeImage);     // Computes the Hough Transform accumulator from the edge-detected image
+
+HoughAccumulator computeHoughTransformSequential(const Image& edgeImage);

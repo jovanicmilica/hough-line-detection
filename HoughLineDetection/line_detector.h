@@ -17,3 +17,5 @@ std::vector<Line> detectLines(const HoughAccumulator& accumulator, int threshold
 // takes the original image and a list of detected lines, and draws these lines onto a copy of the original image, 
 // returning the modified image with lines drawn
 Image drawLines(const Image& originalImage, const std::vector<Line>& lines);
+
+std::vector<Line> detectLinesSequential(const HoughAccumulator& accumulator, int threshold);
