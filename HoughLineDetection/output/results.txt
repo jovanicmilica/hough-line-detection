@@ -1,108 +1,116 @@
 === Hough Line Detection Results ===
 
 [Parallel] output/test1
-  Load:       1.7812 ms
-  Grayscale:  0.2667 ms
-  Edge:       1.0904 ms
-  Hough:      27.3005 ms
-  Lines:      0.1626 ms
-  Total:      30.6014 ms
+  Load:       1.2732 ms
+  Grayscale:  0.3351 ms
+  Edge:       0.7686 ms
+  Hough:      27.8594 ms
+  Lines:      0.2402 ms
+  Total:      30.4765 ms
   Lines detected: 3
 
 [Sequential] images/test1.bmp
-  Load:       1.3344 ms
-  Grayscale:  0.3097 ms
-  Edge:       1.521 ms
-  Hough:      102.474 ms
-  Lines:      0.3294 ms
-  Total:      105.969 ms
+  Load:       1.3638 ms
+  Grayscale:  0.2193 ms
+  Edge:       1.1279 ms
+  Hough:      106.867 ms
+  Lines:      0.2376 ms
+  Total:      109.816 ms
   Lines detected: 3
 
-Speedup: 3.46288x
+Speedup: 3.60329x
 ----------------------------------------
 
 [Parallel] output/test2
-  Load:       3.2628 ms
-  Grayscale:  0.1735 ms
-  Edge:       0.4924 ms
-  Hough:      21.1576 ms
-  Lines:      0.1914 ms
-  Total:      25.2777 ms
+  Load:       3.7779 ms
+  Grayscale:  0.25 ms
+  Edge:       0.7018 ms
+  Hough:      28.2819 ms
+  Lines:      0.2508 ms
+  Total:      33.2624 ms
   Lines detected: 8
 
 [Sequential] images/test2.png
-  Load:       2.9955 ms
-  Grayscale:  0.3191 ms
-  Edge:       1.6947 ms
-  Hough:      121.227 ms
-  Lines:      0.3561 ms
-  Total:      126.592 ms
+  Load:       3.3397 ms
+  Grayscale:  0.3619 ms
+  Edge:       1.9895 ms
+  Hough:      131.089 ms
+  Lines:      0.3063 ms
+  Total:      137.087 ms
   Lines detected: 8
 
-Speedup: 5.00805x
+Speedup: 4.12137x
 ----------------------------------------
 
 [Parallel] output/test3
-  Load:       10.7579 ms
-  Grayscale:  0.3538 ms
-  Edge:       1.9921 ms
-  Hough:      40.7566 ms
-  Lines:      0.2954 ms
-  Total:      54.1558 ms
+  Load:       9.6389 ms
+  Grayscale:  0.5505 ms
+  Edge:       1.6548 ms
+  Hough:      38.2847 ms
+  Lines:      0.5425 ms
+  Total:      50.6714 ms
   Lines detected: 48
 
 [Sequential] images/test3.png
-  Load:       10.7341 ms
-  Grayscale:  1.1639 ms
-  Edge:       5.6044 ms
-  Hough:      217.608 ms
-  Lines:      0.8591 ms
-  Total:      235.97 ms
+  Load:       10.4301 ms
+  Grayscale:  1.0424 ms
+  Edge:       6.6107 ms
+  Hough:      243.732 ms
+  Lines:      0.5628 ms
+  Total:      262.378 ms
   Lines detected: 48
 
-Speedup: 4.35724x
+Speedup: 5.17803x
 ----------------------------------------
 
 [Parallel] output/test4
-  Load:       20.1862 ms
-  Grayscale:  2.9748 ms
-  Edge:       8.2047 ms
-  Hough:      102.695 ms
-  Lines:      0.4691 ms
-  Total:      134.53 ms
+  Load:       22.2756 ms
+  Grayscale:  2.3675 ms
+  Edge:       6.539 ms
+  Hough:      63.9256 ms
+  Lines:      0.4365 ms
+  Total:      95.5442 ms
   Lines detected: 9
 
 [Sequential] images/test4.bmp
-  Load:       22.691 ms
-  Grayscale:  3.8401 ms
-  Edge:       23.0813 ms
-  Hough:      309.631 ms
-  Lines:      0.968 ms
-  Total:      360.211 ms
+  Load:       19.9124 ms
+  Grayscale:  5.378 ms
+  Edge:       27.9042 ms
+  Hough:      342.853 ms
+  Lines:      1.5487 ms
+  Total:      397.597 ms
   Lines detected: 9
 
-Speedup: 2.67755x
+Speedup: 4.16139x
 ----------------------------------------
 
 [Parallel] output/test5
-  Load:       12.6253 ms
-  Grayscale:  0.5534 ms
-  Edge:       1.7636 ms
-  Hough:      68.0725 ms
-  Lines:      0.2772 ms
-  Total:      83.292 ms
+  Load:       17.6124 ms
+  Grayscale:  1.4287 ms
+  Edge:       5.8174 ms
+  Hough:      125.705 ms
+  Lines:      0.4937 ms
+  Total:      151.057 ms
   Lines detected: 12
 
 [Sequential] images/test5.png
-  Load:       12.5745 ms
-  Grayscale:  1.2603 ms
-  Edge:       6.0808 ms
-  Hough:      377.119 ms
-  Lines:      0.7785 ms
-  Total:      397.813 ms
+  Load:       14.7426 ms
+  Grayscale:  1.1261 ms
+  Edge:       6.5129 ms
+  Hough:      402.88 ms
+  Lines:      0.5287 ms
+  Total:      425.79 ms
   Lines detected: 12
 
-Speedup: 4.77613x
+Speedup: 2.81874x
 ----------------------------------------
+
+[Scalability] images/test4.bmp
+  Threads | Hough Time | Speedup vs 1 thread
+  --------+------------+--------------------
+  1       | 411.449 ms    | 1x
+  2       | 179.089 ms    | 2.29745x
+  4       | 115.116 ms    | 3.57421x
+  6       | 73.9758 ms    | 5.56194x
 
 === Done ===

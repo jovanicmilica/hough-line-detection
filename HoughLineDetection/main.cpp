@@ -88,6 +88,8 @@ void processImage(const std::string& inputPath, const std::string& outputPrefix,
             saveImage(data.outputPrefix + "_edges.png", data.edges);
             saveImage(data.outputPrefix + "_result.png", result);
 
+            saveHistogram(data.accumulator, data.outputPrefix + "_histogram.png");
+
             double total = data.timeLoad + data.timeGrayscale + data.timeEdge + data.timeHough + data.timeLine;
             totalParallelOut = total;
 
@@ -168,6 +170,46 @@ void processImageSequential(const std::string& inputPath, int threshold, std::of
     outFile << "  Lines detected: " << lines.size() << "\n";
 }
 
+void analyzeScalability(const std::string& inputPath, int threshold, std::ofstream& outFile)
+{
+    std::cout << "\n--- Scalability analysis: " << inputPath << " ---" << std::endl;
+
+    Image img = loadImage(inputPath);
+
+    std::vector<int> threadCounts = { 1, 2, 4, 6 };
+
+    outFile << "\n[Scalability] " << inputPath << "\n";
+    outFile << "  Threads | Hough Time | Speedup vs 1 thread\n";
+    outFile << "  --------+------------+--------------------\n";
+
+    double baseTime = 0.0;
+
+    for (int numThreads : threadCounts)
+    {
+        double houghTime = 0.0;
+
+        tbb::task_arena arena(numThreads);
+        arena.execute([&]() {
+            Image gray = convertToGrayscale(img);
+            Image edges = applySobel(gray);
+
+            auto start = std::chrono::high_resolution_clock::now();
+            HoughAccumulator accumulator = computeHoughTransform(edges);
+            auto end = std::chrono::high_resolution_clock::now();
+            houghTime = std::chrono::duration<double, std::milli>(end - start).count();
+            });
+
+        if (numThreads == 1)
+            baseTime = houghTime;
+
+        double speedup = baseTime / houghTime;
+
+        std::cout << "  Threads: " << numThreads << " -> " << houghTime << " ms (speedup: " << speedup << "x)" << std::endl;
+
+        outFile << "  " << numThreads << "       | " << houghTime << " ms    | " << speedup << "x\n";
+    }
+}
+
 int main()
 {
     std::ofstream outFile("output/results.txt");
@@ -195,6 +237,9 @@ int main()
 
         std::cout << "Speedup: " << speedup << "x" << std::endl;
     }
+
+	// scalability analysis on the largest image
+    analyzeScalability("images/test4.bmp", 320, outFile);
 
     outFile << "\n=== Done ===\n";
     outFile.close();
