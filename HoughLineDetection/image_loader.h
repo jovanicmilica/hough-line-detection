@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+struct HoughAccumulator;
+
 struct Image {
     int width;
     int height;
@@ -14,3 +16,5 @@ Image convertToGrayscale(const Image& image);
 void saveImage(const std::string& path, const Image& image);
 
 Image convertToGrayscaleSequential(const Image& image);
+
+void saveHistogram(const HoughAccumulator& accumulator, const std::string& outputPath);

@@ -88,6 +88,8 @@ void processImage(const std::string& inputPath, const std::string& outputPrefix,
             saveImage(data.outputPrefix + "_edges.png", data.edges);
             saveImage(data.outputPrefix + "_result.png", result);
 
+            saveHistogram(data.accumulator, data.outputPrefix + "_histogram.png");
+
             double total = data.timeLoad + data.timeGrayscale + data.timeEdge + data.timeHough + data.timeLine;
             totalParallelOut = total;
 

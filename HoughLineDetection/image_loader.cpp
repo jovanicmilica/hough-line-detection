@@ -9,6 +9,7 @@
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <stdexcept>
+#include "hough_transform.h"
 
 Image loadImage(const std::string& path)
 {
@@ -93,4 +94,64 @@ Image convertToGrayscaleSequential(const Image& img)
     }
 
     return gray;
+}
+
+void saveHistogram(const HoughAccumulator& accumulator, const std::string& outputPath)
+{
+    // Count votes distribution
+    int maxVotes = *std::max_element(accumulator.data.begin(), accumulator.data.end());
+
+    int numBins = 50;
+    std::vector<int> bins(numBins, 0);
+
+    for (int val : accumulator.data)
+    {
+        if (val == 0) continue; // Skip empty cells
+        int bin = static_cast<int>((double)val / maxVotes * (numBins - 1));
+        bins[bin]++;
+    }
+
+    // Image dimensions
+    int imgWidth = 600;
+    int imgHeight = 400;
+    int padding = 50;
+    int barWidth = (imgWidth - 2 * padding) / numBins;
+
+    std::vector<unsigned char> imgData(imgWidth * imgHeight * 3, 255); // White background
+
+    // Find max bin count for scaling
+    int maxBinCount = *std::max_element(bins.begin(), bins.end());
+
+    // Draw bars
+    for (int i = 0; i < numBins; i++)
+    {
+        int barHeight = static_cast<int>((double)bins[i] / maxBinCount * (imgHeight - 2 * padding));
+        int x0 = padding + i * barWidth;
+        int y0 = imgHeight - padding - barHeight;
+
+        for (int y = y0; y < imgHeight - padding; y++)
+        {
+            for (int x = x0; x < x0 + barWidth - 1; x++)
+            {
+                int idx = (y * imgWidth + x) * 3;
+                imgData[idx] = 70;  // R
+                imgData[idx + 1] = 130; // G
+                imgData[idx + 2] = 180; // B - steel blue
+            }
+        }
+    }
+
+    // Draw axes
+    for (int x = padding; x < imgWidth - padding; x++)
+    {
+        int idx = ((imgHeight - padding) * imgWidth + x) * 3;
+        imgData[idx] = imgData[idx + 1] = imgData[idx + 2] = 0; // Black X axis
+    }
+    for (int y = padding; y < imgHeight - padding; y++)
+    {
+        int idx = (y * imgWidth + padding) * 3;
+        imgData[idx] = imgData[idx + 1] = imgData[idx + 2] = 0; // Black Y axis
+    }
+
+    stbi_write_png(outputPath.c_str(), imgWidth, imgHeight, 3, imgData.data(), imgWidth * 3);
 }

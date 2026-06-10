@@ -1,108 +1,108 @@
 === Hough Line Detection Results ===
 
 [Parallel] output/test1
-  Load:       1.7812 ms
-  Grayscale:  0.2667 ms
-  Edge:       1.0904 ms
-  Hough:      27.3005 ms
-  Lines:      0.1626 ms
-  Total:      30.6014 ms
+  Load:       1.7166 ms
+  Grayscale:  0.2778 ms
+  Edge:       0.6483 ms
+  Hough:      33.1533 ms
+  Lines:      0.3151 ms
+  Total:      36.1111 ms
   Lines detected: 3
 
 [Sequential] images/test1.bmp
-  Load:       1.3344 ms
-  Grayscale:  0.3097 ms
-  Edge:       1.521 ms
-  Hough:      102.474 ms
-  Lines:      0.3294 ms
-  Total:      105.969 ms
+  Load:       1.1703 ms
+  Grayscale:  0.3055 ms
+  Edge:       1.6107 ms
+  Hough:      100.785 ms
+  Lines:      0.2661 ms
+  Total:      104.138 ms
   Lines detected: 3
 
-Speedup: 3.46288x
+Speedup: 2.88381x
 ----------------------------------------
 
 [Parallel] output/test2
-  Load:       3.2628 ms
-  Grayscale:  0.1735 ms
-  Edge:       0.4924 ms
-  Hough:      21.1576 ms
-  Lines:      0.1914 ms
-  Total:      25.2777 ms
+  Load:       3.2036 ms
+  Grayscale:  0.293 ms
+  Edge:       0.6612 ms
+  Hough:      27.9688 ms
+  Lines:      0.2833 ms
+  Total:      32.4099 ms
   Lines detected: 8
 
 [Sequential] images/test2.png
-  Load:       2.9955 ms
-  Grayscale:  0.3191 ms
-  Edge:       1.6947 ms
-  Hough:      121.227 ms
-  Lines:      0.3561 ms
-  Total:      126.592 ms
+  Load:       3.187 ms
+  Grayscale:  0.3256 ms
+  Edge:       1.6885 ms
+  Hough:      120.41 ms
+  Lines:      0.2724 ms
+  Total:      125.884 ms
   Lines detected: 8
 
-Speedup: 5.00805x
+Speedup: 3.88412x
 ----------------------------------------
 
 [Parallel] output/test3
-  Load:       10.7579 ms
-  Grayscale:  0.3538 ms
-  Edge:       1.9921 ms
-  Hough:      40.7566 ms
-  Lines:      0.2954 ms
-  Total:      54.1558 ms
+  Load:       9.0155 ms
+  Grayscale:  0.4933 ms
+  Edge:       1.4692 ms
+  Hough:      37.6007 ms
+  Lines:      0.4984 ms
+  Total:      49.0771 ms
   Lines detected: 48
 
 [Sequential] images/test3.png
-  Load:       10.7341 ms
-  Grayscale:  1.1639 ms
-  Edge:       5.6044 ms
-  Hough:      217.608 ms
-  Lines:      0.8591 ms
-  Total:      235.97 ms
+  Load:       10.4118 ms
+  Grayscale:  1.3339 ms
+  Edge:       7.4689 ms
+  Hough:      206.803 ms
+  Lines:      0.5029 ms
+  Total:      226.52 ms
   Lines detected: 48
 
-Speedup: 4.35724x
+Speedup: 4.6156x
 ----------------------------------------
 
 [Parallel] output/test4
-  Load:       20.1862 ms
-  Grayscale:  2.9748 ms
-  Edge:       8.2047 ms
-  Hough:      102.695 ms
-  Lines:      0.4691 ms
-  Total:      134.53 ms
+  Load:       18.3023 ms
+  Grayscale:  1.3578 ms
+  Edge:       5.9655 ms
+  Hough:      57.5871 ms
+  Lines:      0.4033 ms
+  Total:      83.616 ms
   Lines detected: 9
 
 [Sequential] images/test4.bmp
-  Load:       22.691 ms
-  Grayscale:  3.8401 ms
-  Edge:       23.0813 ms
-  Hough:      309.631 ms
-  Lines:      0.968 ms
-  Total:      360.211 ms
+  Load:       16.4148 ms
+  Grayscale:  3.8612 ms
+  Edge:       21.8582 ms
+  Hough:      299.841 ms
+  Lines:      1.2601 ms
+  Total:      343.235 ms
   Lines detected: 9
 
-Speedup: 2.67755x
+Speedup: 4.10489x
 ----------------------------------------
 
 [Parallel] output/test5
-  Load:       12.6253 ms
-  Grayscale:  0.5534 ms
-  Edge:       1.7636 ms
-  Hough:      68.0725 ms
-  Lines:      0.2772 ms
-  Total:      83.292 ms
+  Load:       15.3899 ms
+  Grayscale:  1.0439 ms
+  Edge:       2.1013 ms
+  Hough:      72.0942 ms
+  Lines:      0.368 ms
+  Total:      90.9973 ms
   Lines detected: 12
 
 [Sequential] images/test5.png
-  Load:       12.5745 ms
-  Grayscale:  1.2603 ms
-  Edge:       6.0808 ms
-  Hough:      377.119 ms
-  Lines:      0.7785 ms
-  Total:      397.813 ms
+  Load:       12.6851 ms
+  Grayscale:  1.0213 ms
+  Edge:       5.904 ms
+  Hough:      386.289 ms
+  Lines:      0.8802 ms
+  Total:      406.78 ms
   Lines detected: 12
 
-Speedup: 4.77613x
+Speedup: 4.47024x
 ----------------------------------------
 
 === Done ===
