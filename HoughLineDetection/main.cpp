@@ -217,10 +217,11 @@ int main()
 
     std::vector<std::tuple<std::string, std::string, int>> images = {
         { "images/test1.bmp", "output/test1", 190 },
-        { "images/test2.png", "output/test2", 190 },
-        { "images/test3.png", "output/test3", 190 },
+        { "images/test2.png", "output/test2", 140 },
+        { "images/test3.png", "output/test3", 200 },
         { "images/test4.bmp", "output/test4", 320 },
-        { "images/test5.png", "output/test5", 260 }
+        { "images/test5.png", "output/test5", 260 },
+		{ "images/test6.png", "output/test6", 300 } 
     };
 
     for (const auto& img : images)
